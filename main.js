@@ -52,8 +52,8 @@ LinkedList.prototype.deleteItem = function (nodeToDelete) {
     };
 
     while (currentNode != null) {
-        if (currentNode == nodeToDelete) {
-            currentNode.next = currentNode.next.next;
+        if (currentNode.next == nodeToDelete) {
+            currentNode.next = nodeToDelete.next;
             this.length--;
             return;
         }
@@ -65,7 +65,7 @@ LinkedList.prototype.removeItemByIndex = function(index) {
     var currentNode = this.head;
     var i = 1;
 
-    if (index = 0) {
+    if (index == 0) {
         this.head = null;
         this.length--;
         return;
