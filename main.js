@@ -1,14 +1,16 @@
-function LinkedList() {
-  this.length = 0;
-  this.head = null;
-};
-
-function Node(data) {
-    this.data = data;
+function Node(value) {
+    this.data = value;
+    this.previous = null;
     this.next = null;
-};
+}
+   
+function DoublyList() {
+    this._length = 0;
+    this.head = null;
+    this.tail = null;
+}
 
-var list = new LinkedList();
+var list = new DoblyList();
 
 var newNode = new Node(data);
 
@@ -21,24 +23,21 @@ LinkedList.prototype.print = function() {
    }
 };
 
-LinkedList.prototype.addToTheBeginning = function() {
+LinkedList.prototype.addToTheBeginning = function(newNode) {
     newNode.next = this.head;
+    this.head.previous = newNode;
     this.head = newNode;
     this.length++;
 };
 
-LinkedList.prototype.addToTheEnd = function() {
+LinkedList.prototype.addToTheEnd = function(newNode) {
     if(this.head===null) {
         this.head = newNode;
         this.length++;
     }
-    
-    var currentNode = this.head;
-    do {
-        currentNode = currentNode.next;
-    }while(currentNode.next)
-    
-    currentNode.next = newNode;
+    newNode.previous = this.tail;
+    this.tail.next = newNode;
+    this.tail = newNode;
     this.length++;
 }
 
@@ -47,13 +46,23 @@ LinkedList.prototype.deleteItem = function (nodeToDelete) {
 
     if (nodeToDelete = this.head) {
         this.head = nodeToDelete.next;
+        this.head.previous = null;
+        this.length--;
+        return;
+    };
+
+    if (nodeToDelete = this.tail) {
+        this.tail = nodeToDelete.previous;
+        this.tail.next = null;
         this.length--;
         return;
     };
 
     while (currentNode != null) {
-        if (currentNode == nodeToDelete) {
-            currentNode.next = currentNode.next.next;
+        if (currentNode.next == nodeToDelete) {
+            var newNeighbour = nodeToDelete.next
+            newNeighbour.previous = currentNode;
+            currentNode.next = newNeighbour;
             this.length--;
             return;
         }
@@ -64,9 +73,18 @@ LinkedList.prototype.deleteItem = function (nodeToDelete) {
 LinkedList.prototype.removeItemByIndex = function(index) {
     var currentNode = this.head;
     var i = 1;
+    var newNeighbour = currentNode.next.next;
 
-    if (index = 0) {
+    if (index === 0) {
         this.head = null;
+        this.length--;
+        return;
+    }
+
+    if (index === this.length - 1) {
+        newTail = this.tail.previous
+        newTail.next = null;
+        this.tail = newTail;
         this.length--;
         return;
     }
@@ -75,6 +93,8 @@ LinkedList.prototype.removeItemByIndex = function(index) {
         currentNode = currentNode.next;
     }
 
-    currentNode.next = currentNode.next.next;
+    newNeighbour.previous = currentNode;
+    currentNode.next = newNeighbour;
+
     this.length--;
 }
